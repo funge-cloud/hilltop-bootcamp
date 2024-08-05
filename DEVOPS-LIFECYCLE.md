@@ -26,11 +26,12 @@ A typical CI/CD pipeline involves multiple stages, including code integration, t
 
 #### 2. **Code:**
 - **Tools:** Git, GitHub
-- **Description:** Developers commit code to feature branches in GitHub. Implement branching strategies (e.g., Git Flow) for managing releases.
+- **Description:** Developers commit code to feature branches in GitHub.
+- We Implement branching strategies (e.g., Git Flow) for managing releases.
 
 #### 3. **Test:**
 - **Tools:** Jenkins
-- **Description:** Jenkins runs unit tests and static code analysis on the committed code. Any code that fails these tests is sent back to the developers.
+- **Description:** Jenkins pipeline runs unit tests and static code analysis on the committed code. Any code that fails these tests is sent back to the developers.
 
 #### 4. **Build:**
 - **Tools:** Jenkins, Docker
@@ -42,7 +43,8 @@ A typical CI/CD pipeline involves multiple stages, including code integration, t
 
 #### 6. **Deploy:**
 - **Tools:** Terraform, AWS, Kubernetes, Helm, ArgoCD
-- **Description:** Use Terraform to manage AWS infrastructure. Jenkins triggers Helm charts to deploy the application to the Kubernetes cluster. ArgoCD handles the GitOps approach, ensuring the desired state is maintained.
+- **Description:** Use Terraform to manage AWS infrastructure. Jenkins triggers Helm charts to deploy the application to the Kubernetes cluster.
+- ArgoCD handles the GitOps approach, ensuring the desired state is maintained.
 
 #### 7. **Monitor:**
 - **Tools:** Grafana, Slack
