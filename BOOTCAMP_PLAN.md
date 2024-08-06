@@ -192,18 +192,14 @@
 
 ### Project Ideas
 1. **CI/CD Pipeline Implementation:**
-   - **Description:** Build a complete CI/CD pipeline using Jenkins, integrating GitHub for version control, and deploying to Kubernetes with Helm.
+   - **Description:** Build a complete CI/CD pipeline using Jenkins, integrating GitHub for version control, and deploying to Kubernetes.
    - **Focus:** Version control, CI/CD, containerization, and orchestration.
 
 2. **Infrastructure as Code with Terraform:**
    - **Description:** Create a scalable infrastructure on AWS using Terraform, including VPCs, EC2 instances, RDS, and IAM roles.
    - **Focus:** Infrastructure automation, AWS services, and security.
 
-3. **Monitoring and Logging:**
-   - **Description:** Set up a monitoring and logging system using Grafana and Prometheus to monitor a microservices application.
-   - **Focus:** Monitoring, alerting, and log management.
-
-4. **Secure Microservices Deployment:**
+3. **Secure Microservices Deployment:**
    - **Description:** Deploy a microservices application on Kubernetes with secure communication between services using TLS, and manage secrets with AWS Secrets Manager.
    - **Focus:** Security, container orchestration, and secret management.
 
