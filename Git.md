@@ -86,3 +86,126 @@
     git flow feature start my-feature
     git flow feature finish my-feature
     ```
+=============================================================================================================================================================================================
+#### 1. **What is Git and why is it used?**
+- **Response**: 
+  - Git is a distributed version control system designed to handle everything from small to very large projects with speed and efficiency. It allows multiple developers to work on the same codebase simultaneously without conflicts, tracks changes, and enables collaboration.
+
+#### 2. **Explain the difference between `git pull` and `git fetch`.**
+- **Response**: 
+  - `git fetch` downloads commits, files, and refs from a remote repository into your local repository. It doesn’t merge changes into your working directory.
+  - `git pull` does the same as `git fetch` but also immediately merges the downloaded changes into your working branch.
+
+#### 3. **How do you resolve a merge conflict in Git?**
+- **Response**: 
+  - When a merge conflict occurs, Git will mark the conflicted areas in the affected files. You need to manually resolve the conflicts, then add the resolved files (`git add <file>`) and commit the merge (`git commit`).
+
+#### 4. **What is a Git branch and why is it important?**
+- **Response**: 
+  - A branch in Git represents an independent line of development. It is important because it allows multiple developers to work on different features or fixes without interfering with each other’s work. Branches can be merged back into the main branch once they are complete.
+
+#### 5. **Describe the Git workflow you use in your current project.**
+- **Response**: 
+  - Typically, I use a feature branch workflow. Each new feature or bug fix is developed in a separate branch, which is then merged into the main branch after review. This keeps the main branch stable and clean.
+
+#### 6. **How do you create a new branch in Git?**
+- **Response**: 
+  - To create a new branch:
+    ```bash
+    git checkout -b <branch-name>
+    ```
+
+#### 7. **What is a commit in Git?**
+- **Response**: 
+  - A commit in Git is a snapshot of your repository at a specific point in time. It records changes to files and directories, allowing you to revert back to that state if needed.
+
+#### 8. **How do you revert a commit in Git?**
+- **Response**: 
+  - To revert a commit:
+    ```bash
+    git revert <commit-hash>
+    ```
+  - This creates a new commit that undoes the changes made by the specified commit.
+
+#### 9. **Explain Git rebase and how it differs from merge.**
+- **Response**: 
+  - `git rebase` moves or combines a sequence of commits to a new base commit. It re-applies commits on top of another base tip, creating a linear history. In contrast, `git merge` combines changes from two branches and creates a new merge commit, preserving the original history.
+
+#### 10. **What is Git stash and how do you use it?**
+- **Response**: 
+  - Git stash temporarily shelves changes you have made to your working directory so you can work on something else. To stash changes:
+    ```bash
+    git stash
+    ```
+  - To apply stashed changes:
+    ```bash
+    git stash apply
+    ```
+
+#### 11. **How do you delete a branch in Git?**
+- **Response**: 
+  - To delete a branch locally:
+    ```bash
+    git branch -d <branch-name>
+    ```
+  - To delete a branch remotely:
+    ```bash
+    git push origin --delete <branch-name>
+    ```
+
+#### 12. **Explain the use of `.gitignore` file.**
+- **Response**: 
+  - The `.gitignore` file specifies files and directories that Git should ignore and not track. It helps keep unnecessary files out of your repository.
+
+#### 13. **What is Git cherry-pick and when would you use it?**
+- **Response**: 
+  - `git cherry-pick` applies the changes introduced by an existing commit to the current branch. It’s useful for applying specific changes from one branch to another without merging the entire branch.
+
+#### 14. **Describe Git Flow and its key branches.**
+- **Response**: 
+  - Git Flow is a branching model with a predefined set of branches and rules. Key branches include `master` (production), `develop` (integration), `feature/*` (new features), `release/*` (preparing for a new production release), and `hotfix/*` (emergency fixes).
+
+#### 15. **How do you rename a branch in Git?**
+- **Response**: 
+  - To rename the current branch:
+    ```bash
+    git branch -m <new-branch-name>
+    ```
+
+#### 16. **What is a detached HEAD in Git and how do you fix it?**
+- **Response**: 
+  - A detached HEAD state occurs when you checkout a commit directly instead of a branch. To fix it, you can create a new branch from that commit:
+    ```bash
+    git checkout -b <new-branch-name>
+    ```
+
+#### 17. **How do you undo the last commit but keep the changes?**
+- **Response**: 
+  - To undo the last commit but keep the changes:
+    ```bash
+    git reset --soft HEAD~1
+    ```
+
+#### 18. **Explain the difference between `git reset` and `git revert`.**
+- **Response**: 
+  - `git reset` moves the HEAD to a previous commit, discarding subsequent commits. It can be used to unstage changes (`--soft`) or delete changes (`--hard`).
+  - `git revert` creates a new commit that undoes the changes made by a previous commit without altering the commit history.
+
+#### 19. **What is a Git tag and how do you create one?**
+- **Response**: 
+  - A Git tag is a reference to a specific point in the Git history. To create a tag:
+    ```bash
+    git tag -a <tag-name> -m "Tag message"
+    git push origin <tag-name>
+    ```
+
+#### 20. **How do you handle large binary files in Git?**
+- **Response**: 
+  - Use Git LFS (Large File Storage) to handle large binary files. It replaces large files with text pointers inside Git, while storing the actual file contents on a remote server. To track a file with Git LFS:
+    ```bash
+    git lfs track "<file>"
+    git add .gitattributes
+    git add <file>
+    git commit -m "Add large file"
+    git push
+    ```
