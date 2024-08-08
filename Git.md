@@ -209,3 +209,64 @@
     git commit -m "Add large file"
     git push
     ```
+-
+# GITHUB
+--------
+#### Interview Focus: GitHub workflows
+
+1. **How do you create and merge a pull request in GitHub?**
+
+   **Response:**
+   - To create a pull request, navigate to the repository on GitHub, click on "Pull Requests" and then "New Pull Request".
+   - Select the branch you want to merge into the base branch (usually `main` or `master`), and click "Create Pull Request".
+   - Fill in the title and description, then click "Create Pull Request".
+   - To merge, navigate to the pull request, click "Merge Pull Request", confirm the merge, and delete the branch if necessary.
+
+2. **How do you resolve conflicts in a pull request on GitHub?**
+
+   **Response:**
+   - Identify the conflicting files in the pull request.
+   - Checkout the branch locally and merge the base branch into your feature branch to see the conflicts.
+   - Resolve the conflicts in your code editor.
+   - Commit the resolved changes and push to the feature branch.
+   - GitHub will update the pull request with the resolved conflicts.
+   - **Example:**
+     ```bash
+     git checkout feature-branch
+     git pull origin main
+     # Resolve conflicts in the editor
+     git add .
+     git commit -m "Resolve merge conflicts"
+     git push origin feature-branch
+     ```
+
+3. **How do you revert a merged pull request in GitHub?**
+
+   **Response:**
+   - Navigate to the merged pull request.
+   - Click the "Revert" button on the pull request page. This creates a new pull request that undoes the changes.
+   - Merge the new pull request to revert the changes.
+   - Alternatively, you can use the command line to revert the merge commit.
+   - **Example:**
+     ```bash
+     # Revert the merge commit
+     git revert -m 1 <merge_commit_sha>
+     git push origin main
+     ```
+
+4. **How can you enforce code reviews on pull requests in GitHub?**
+
+   **Response:**
+   - Navigate to the repository settings on GitHub.
+   - Under "Branches", find "Branch protection rules".
+   - Add a rule for the `main` or `master` branch.
+   - Select "Require pull request reviews before merging".
+   - Optionally, set the number of required reviewers and other options like dismissing stale reviews.
+
+5. **How do you manage secrets and sensitive data in GitHub repositories?**
+
+   **Response:**
+   - GitHub provides a Secrets management feature to store sensitive information.
+   - Navigate to the repository settings, then to "Secrets".
+   - Add new secrets by providing a name and value.
+   - Access these secrets in GitHub Actions workflows using the `secrets` context.
