@@ -1,101 +1,126 @@
 #          THREE TIER APPLICATION WITH AWS, EKS, HELM ARGOCD     
 ---
-# Project Description
 
+Project design for deploying a **Node.js application** that includes a **frontend (FE)**, **backend (BE)**, and **MongoDB database** (DB) on AWS using **Terraform** 
+for infrastructure provisioning, **Helm** for application management, **ArgoCD** for GitOps, and key AWS services for security, hosting, and secret management.
 
-The project aims to develop a simple full-stack web application that leverages **AWS infrastructure** using **Terraform** for the underlying infrastructure setup, 
-including a **VPC**, an **EKS cluster** with two nodes, and the necessary networking components. The application has a **frontend (FE)**, **backend (BE)**, and **MongoDB database** (DB), 
-which are deployed on the **Amazon EKS cluster**. The frontend serves a dashboard where users can input information that is then processed and stored in the MongoDB database via the backend. 
-The information submitted by the users is visible in real-time on the dashboard in a tabular format.
+---
 
-The deployment will be automated using **Helm** to manage Kubernetes resources, ensuring the application scales efficiently and can be managed via EKS. 
-Each component of the application (FE, BE, and DB) will run in specific subnets and on designated ports to maintain separation and ensure security.
+### **Project Description**:
+The project is a simple Node.js web application that allows users to input data through the frontend, which is processed by the backend and stored in a MongoDB database. 
+The data is then displayed on the UI in real-time. The entire stack is deployed on an **Amazon EKS cluster** with two worker nodes, distributed across different 
+AWS subnets for frontend, backend, and database tiers. **Helm** is used for Kubernetes resource management, while **ArgoCD** is implemented for continuous deployment.
 
 ---
 
 ### **Architecture**:
 
-#### **1. VPC (Virtual Private Cloud)**:
-- The application will be deployed within a custom **VPC** in a specific region (e.g., **eu-central-1**). The VPC will be divided into **public and private subnets**.
-   - **Public Subnets**: The frontend application will be deployed in public subnets to allow users to access the UI from the internet.
-   - **Private Subnets**: The backend (API) and MongoDB database will be deployed in private subnets, isolated from direct internet access for security.
-   
-   The VPC architecture will include the following:
-   - **Internet Gateway**: To allow internet traffic to reach the frontend.
-   - **NAT Gateway**: For backend instances to initiate outbound connections to the internet (for things like API calls or updates) while being unreachable from the internet.
-   - **Route Tables**: Define how traffic flows between the subnets, ensuring that traffic to the frontend can be routed to the backend and database.
+#### **1. VPC and Networking**:
+- **AWS VPC**: The VPC will be created using **Terraform** with public and private subnets.
+  - **Public Subnets**: For hosting the frontend on specific subnets with internet access.
+  - **Private Subnets**: For the backend and MongoDB database to ensure they are not directly exposed to the internet.
+  - **NAT Gateway**: For backend services to access the internet securely from private subnets.
+  - **Route Tables**: Route traffic from the frontend to the backend and the backend to the database.
 
-#### **2. Amazon EKS (Elastic Kubernetes Service)**:
-- An **EKS cluster** will be deployed within the VPC. This cluster will consist of **two worker nodes** distributed across private subnets for high availability. 
-   - **Node Groups**: Each node group will be provisioned using **Terraform** to ensure consistency across environments.
-   - **Helm** will be used to manage Kubernetes resources within the EKS cluster, ensuring that deployments are standardized, repeatable, and scalable.
+#### **2. Kubernetes Cluster (EKS)**:
+- **Amazon EKS**: The Node.js application will run on a highly available Kubernetes cluster managed by AWS.
+  - **2 Worker Nodes**: Distributed across two availability zones (AZs).
+  - **Node groups** will be deployed to the private subnets.
 
-#### **3. Application Components**:
-The application consists of three main tiers:
-   
-   **a. Frontend (FE)**:
-   - The **frontend** is a simple web-based dashboard (built with React, Angular, or any web framework of choice). It will be deployed in the **public subnet** and exposed via an **Elastic Load Balancer (ELB)**.
-   - Users will interact with the frontend to submit data, which is then sent to the backend via HTTP requests. The frontend will also fetch data from the backend and display it in a tabular format on the UI.
-   - **Port**: The frontend will listen on port **80** for HTTP traffic.
+---
 
-   **b. Backend (BE)**:
-   - The **backend** is a service (built with Node.js, Python, or similar) that handles requests from the frontend and interacts with the **MongoDB** database.
-   - It provides RESTful API endpoints to submit and fetch data, such as `/submit` and `/fetch`. When a user submits data through the frontend,
-   - the backend processes it and stores it in MongoDB. The backend will also fetch data from the database to display it on the dashboard.
-   - The backend service will be deployed in a **private subnet** and will not be exposed directly to the internet.
-   - **Port**: The backend service will listen on port **8080**.
+### **Kubernetes Objects**:
 
-   **c. MongoDB Database (DB)**:
-   - MongoDB will be deployed in a **private subnet** to ensure that it is not publicly accessible. Only the backend service will be able to interact with it.
-   - The database will store the information submitted by users and make it available for querying when requested by the backend.
-   - **Port**: MongoDB will run on port **27017**, and access will be restricted to the backend service.
+To manage and deploy the application components, we will use specific Kubernetes objects:
 
-#### **4. Networking and Security**:
-- **Security Groups**: Security groups will be configured to allow traffic between the different tiers of the application. For example, the frontend can communicate with the backend over port 8080, and the backend can communicate with MongoDB over port 27017.
-- **Subnets and Routing**: Each tier will be deployed in specific subnets to ensure isolation between public-facing and private resources. Traffic between tiers will be routed through internal VPC networking, ensuring that sensitive services like MongoDB are not exposed externally.
+#### **Frontend (FE)**:
+- **Deployment**: This manages the frontend Node.js web server and ensures that the correct number of replicas are running. It will scale horizontally if needed.
+- **Service**: A **LoadBalancer** service will be used to expose the frontend to the internet. It will listen on port **80**.
+- **Ingress**: To route external HTTP traffic to the frontend, an **Ingress** resource will be configured to handle routing rules and SSL termination (via AWS ACM).
+
+#### **Backend (BE)**:
+- **Deployment**: This manages the backend API server, which communicates with both the frontend and the MongoDB database. The backend will be scalable and run on private subnets.
+- **Service**: A **ClusterIP** service will be used for the backend, exposing it internally to the frontend via port **8080**.
+
+#### **MongoDB (DB)**:
+- **StatefulSet**: Since MongoDB requires persistence and state, a **StatefulSet** will be used for deployment. This ensures consistent network identities for MongoDB pods and guarantees persistence.
+- **PersistentVolumeClaim (PVC)**: This will request storage for MongoDB to persist data.
+- **Service**: A **ClusterIP** service will be used for MongoDB, exposing it internally to the backend on port **27017**.
+
+---
+
+### **AWS Services for Hosting, Security, and Secret Management**:
+
+#### **1. Hosting**:
+- **Amazon EKS**: For hosting the Kubernetes cluster and managing the infrastructure.
+- **Amazon S3** (optional): For hosting static assets (if applicable) or storing backups of MongoDB.
+
+#### **2. Security**:
+- **AWS IAM**: For managing roles and policies for access control.
+  - **EKS Worker Nodes IAM Role**: To allow Kubernetes nodes to interact with other AWS services.
+  - **ArgoCD IAM Role**: To allow ArgoCD to deploy resources in the EKS cluster securely.
+- **AWS Security Groups**: Used to restrict access to the frontend, backend, and database. The frontend will allow traffic from the internet, while the backend and MongoDB will only accept traffic from within the VPC.
+
+#### **3. Secret Management**:
+- **AWS Secrets Manager**: For securely storing sensitive information like MongoDB connection strings, API keys, and passwords.
+  - The backend will retrieve secrets dynamically at runtime (via Secrets Manager API).
+  - **Terraform** can provision and manage these secrets.
+
+---
+
+### **Deployment and Continuous Integration (CI/CD)**:
+
+#### **1. Helm for Application Deployment**:
+- **Helm Charts**: The frontend, backend, and MongoDB database will each have separate Helm charts to manage Kubernetes resources (Deployments, Services, StatefulSets).
+  - **Frontend**: Helm chart for deploying frontend pods and exposing them via a LoadBalancer.
+  - **Backend**: Helm chart for deploying backend API pods, with internal ClusterIP service.
+  - **MongoDB**: Helm chart with StatefulSet, PersistentVolumeClaims, and ClusterIP service.
+
+#### **2. ArgoCD for Continuous Deployment (CD)**:
+- **ArgoCD**: Implement **GitOps** using ArgoCD to manage continuous deployment. Any changes to the Helm chart or Kubernetes manifests in the Git repository will automatically trigger deployments.
+  - ArgoCD will watch the repository for changes, synchronize them with the EKS cluster, and manage application lifecycle across environments (e.g., Dev, Staging, Prod).
 
 ---
 
 ### **Application Flow**:
 
-1. **User Interaction**:
-   - A user accesses the **frontend UI** through their browser and submits data via a form on the dashboard. This form contains fields like `name`, `email`, and `message`.
+#### **Frontend**:
+- Users access the **frontend** via a public endpoint exposed through a **LoadBalancer** in the **public subnet**. They input information via a form.
+- Once the form is submitted, the data is sent to the **backend** over HTTP POST requests.
 
-2. **Data Submission**:
-   - When the user clicks "Submit," the frontend sends the data via an HTTP POST request to the backend API (e.g., `/submit`).
+#### **Backend**:
+- The **backend** processes incoming requests from the frontend.
+- Data is stored in the **MongoDB database** running on a StatefulSet in the private subnet.
+- The backend also exposes API endpoints (e.g., `/submit`, `/fetch`) for retrieving and submitting data.
 
-3. **Backend Processing**:
-   - The backend receives the data, processes it, and inserts it into the **MongoDB database** via a secure connection.
-   - A response is sent back to the frontend to confirm that the data has been successfully stored.
-
-4. **Database Interaction**:
-   - The MongoDB database stores the submitted data in a structured format. This data is accessible to the backend whenever needed.
-
-5. **Fetching Data**:
-   - The frontend periodically sends GET requests to the backend to fetch all submitted data (e.g., via an API endpoint like `/fetch`). 
-   - The backend retrieves the data from MongoDB and sends it back to the frontend, where it is displayed in a tabular format on the dashboard for the user to see.
-
-6. **Dashboard Update**:
-   - As the user submits data, the dashboard is updated in real-time (or on refresh) to display the newly added information in the table.
+#### **MongoDB**:
+- **MongoDB** stores the submitted data in collections.
+- The backend retrieves this data and serves it to the frontend, displaying it in a tabular format.
 
 ---
 
-### **Deployment Process Using Helm**:
+### **Workflow for Application Deployment**:
 
-1. **Helm Charts**:
-   - **Helm** will be used to package the Kubernetes resources (Deployment, Service, ConfigMap, etc.) for each component (frontend, backend, and MongoDB).
-   - Each component will have its own Helm chart that defines its deployment strategy, resource allocation (e.g., CPU and memory), and service configuration (e.g., ClusterIP for backend and LoadBalancer for frontend).
+1. **Terraform Infrastructure Setup**:
+   - Use Terraform to provision the **VPC**, **Subnets**, **Security Groups**, and **Amazon EKS** cluster.
+   - Create the necessary IAM roles and policies for EKS and ArgoCD to securely manage AWS resources.
 
-2. **Helm Deployment**:
-   - Deploy the **MongoDB Helm chart** into the EKS cluster's private subnet.
-   - Deploy the **backend Helm chart** into the private subnet and expose it internally to the frontend.
-   - Deploy the **frontend Helm chart** into the public subnet and expose it via an Elastic Load Balancer for external access.
+2. **Helm Chart Configuration**:
+   - Write Helm charts for the frontend, backend, and MongoDB services.
+   - Use `helm install` to deploy each component to the EKS cluster in the appropriate subnets.
 
-3. **EKS Cluster Management**:
-   - The **EKS cluster** will manage the lifecycle of the application, ensuring high availability and scaling of pods as needed.
-   - Each component (FE, BE, and DB) will run in its own **Kubernetes pod**, and the application will benefit from EKS's autoscaling and self-healing features.
+3. **ArgoCD Setup**:
+   - Install **ArgoCD** on the EKS cluster and configure it to watch the Git repository containing the Helm charts.
+   - As changes are pushed to the Git repository, ArgoCD will automatically apply the changes to the EKS cluster.
+
+4. **Monitoring**:
+   - Set up monitoring for the EKS cluster using **AWS CloudWatch** and **Prometheus** to monitor the health of Kubernetes resources.
+   - Monitor logs and metrics for frontend, backend, and MongoDB components using **AWS CloudWatch Logs** and **Kubernetes Dashboard**.
 
 ---
 
-This design outlines the infrastructure, architecture, and application flow for deploying a full-stack application using **AWS**, **Terraform**, **EKS**, and **Helm**. 
-By structuring the deployment into distinct tiers (frontend, backend, database) and using Terraform for infrastructure provisioning and Helm for application deployment, the solution provides scalability, security, and ease of management.
+### **Conclusion**:
+
+This project design provides a comprehensive solution for deploying a **Node.js-based full-stack application** on AWS using **Terraform** for infrastructure, **Helm** for Kubernetes resource management, and **ArgoCD** for continuous deployment. 
+The architecture ensures that different components of the application (FE, BE, and DB) are isolated in secure subnets and managed efficiently on EKS. Key AWS services such as **Secrets Manager**, **IAM**, and **CloudWatch** enhance security and monitoring, 
+ensuring a scalable and secure application environment.he deployment into distinct tiers (frontend, backend, database) and using Terraform for infrastructure provisioning and Helm for application deployment, the solution provides scalability, security, and ease of management.
