@@ -1,4 +1,4 @@
-### **Project Description**:
+#                                                                              **Project Description**
 
 The project aims to develop a simple full-stack web application that leverages **AWS infrastructure** using **Terraform** for the underlying infrastructure setup, 
 including a **VPC**, an **EKS cluster** with two nodes, and the necessary networking components. The application has a **frontend (FE)**, **backend (BE)**, and **MongoDB database** (DB), 
