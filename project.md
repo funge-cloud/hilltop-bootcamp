@@ -54,7 +54,7 @@ Students will use Terraform to provision a Jenkins server and set up a CI/CD pip
 #### **Description**  
 1. Write Terraform files to:  
    - Create a new EC2 instance (`t3.meduim`) in a public subnet for Jenkins.  
-   - Add a security group to allow HTTP and SSH access.  
+   - Add a security group to allow HTTP, jenkins port and SSH access.  
    - Use a `user_data` script to install Jenkins and start the Jenkins service.  
 2. Configure Jenkins to:  
    - Clone the `hilltop-docker` repository.  
