@@ -93,4 +93,3 @@ Students will use Terraform to provision a Jenkins server and set up a CI/CD pip
 #### **Task 2**  
 - Automate the build and deployment process using Jenkins, with a Jenkins pipeline running on a separate EC2 instance.  
 
-This version simplifies the flow, ensures logical progression, and integrates the core technologies (Terraform, Docker, and Jenkins) effectively.
