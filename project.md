@@ -1,8 +1,8 @@
 
 
-### **Task 1: Modify and Deploy the Dockerized Application with Terraform**  
+# **Task 1: Modify and Deploy the Dockerized Application with Terraform**  
 #### **Objective**  
-Students will modify the application, update the Dockerfile, and deploy the Dockerized application on an EC2 instance provisioned using Terraform.  
+Engineers will modify the application, update the Dockerfile, and deploy the Dockerized application on an EC2 instance provisioned using Terraform.  
 
 #### **Description**  
 1. Clone the repository: [hilltop-docker](https://github.com/HILL-TOPCONSULTANCY/hilltop-docker.git).  
@@ -14,7 +14,7 @@ Students will modify the application, update the Dockerfile, and deploy the Dock
    - `STUDENT_NAME` (your name)  
    - `STUDENT_EMAIL` (your email address)  
 4. Write Terraform files to:  
-   - Create an AWS EC2 instance (`t2.micro`) in a public subnet.  
+   - Create an AWS EC2 instance (`t3.midium`) in a public subnet.  
    - Add a security group to allow HTTP traffic on port 80.  
 5. Use a `user_data` script in Terraform to:  
    - Install Docker on the instance.  
@@ -47,7 +47,7 @@ Students will modify the application, update the Dockerfile, and deploy the Dock
 
 ---
 
-### **Task 2: Automate the Build and Deployment with Jenkins**  
+# **Task 2: Automate the Build and Deployment with Jenkins**  
 #### **Objective**  
 Students will use Terraform to provision a Jenkins server and set up a CI/CD pipeline for automating the build, test, and deployment process.  
 
@@ -86,7 +86,7 @@ Students will use Terraform to provision a Jenkins server and set up a CI/CD pip
 
 ### **Task Summary**  
 
-#### **Task 1**  
+### **Task 1**  
 - Modify the app and Dockerfile.  
 - Deploy it to an EC2 instance using Terraform and Docker.  
 
