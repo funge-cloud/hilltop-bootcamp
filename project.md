@@ -8,7 +8,7 @@ Engineers will modify the application, update the Dockerfile, and deploy the Doc
 1. Clone the repository: [hilltop-docker](https://github.com/HILL-TOPCONSULTANCY/hilltop-docker.git).  
 2. Modify the `app.js` file to include a log statement:  
    ```javascript  
-   console.log("App built by [Your Name].");  
+   console.log("App built by [Cornelius].");  
    ```  
 3. Update the `Dockerfile` to include two environment variables:  
    - `STUDENT_NAME` (your name)  
